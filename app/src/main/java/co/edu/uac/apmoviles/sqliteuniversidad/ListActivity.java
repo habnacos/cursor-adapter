@@ -1,23 +1,18 @@
 package co.edu.uac.apmoviles.sqliteuniversidad;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CursorAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class ListActivity extends AppCompatActivity {
-    private ListView lista;
+    ArrayList<Estudiante> listaEstudiante;
+    private RecyclerView recyclerEstudiante;
     private EstudianteController db;
     private EstudianteAdapter adapter;
     private Cursor cursor;
@@ -27,13 +22,15 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        listaEstudiante = new ArrayList<>();
         db = new EstudianteController(getApplicationContext());
-        lista = findViewById(R.id.listEstudiante);
+        recyclerEstudiante = findViewById(R.id.recyclerEstudiante);
+        recyclerEstudiante.setLayoutManager(new LinearLayoutManager(this));
 
         cursor = db.allEstudiantes();
-        if (cursor.moveToFirst()) {
-            adapter = new EstudianteAdapter(this, cursor, 0);
-            lista.setAdapter(adapter);
-        }
+        while (cursor.moveToNext())
+            listaEstudiante.add(new Estudiante(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
+        EstudianteAdapter adapter = new EstudianteAdapter(listaEstudiante);
+        recyclerEstudiante.setAdapter(adapter);
     }
 }

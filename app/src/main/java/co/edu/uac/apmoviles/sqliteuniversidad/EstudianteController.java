@@ -33,7 +33,7 @@ public class EstudianteController {
 
     public Cursor allEstudiantes(){
         SQLiteDatabase data = bd.getReadableDatabase();
-        Cursor cur = data.query(DefDB.tabla_est,null,null,null,null,null,null);
+        Cursor cur = data.rawQuery( "Select * from " + DefDB.tabla_est,null);
         if (cur != null)
             cur.moveToFirst();
         return cur;
