@@ -14,7 +14,6 @@ public class ListActivity extends AppCompatActivity {
     ArrayList<Estudiante> listaEstudiante;
     private RecyclerView recyclerEstudiante;
     private EstudianteController db;
-    private EstudianteAdapter adapter;
     private Cursor cursor;
 
     @Override
@@ -22,15 +21,8 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        listaEstudiante = new ArrayList<>();
-        db = new EstudianteController(getApplicationContext());
-        recyclerEstudiante = findViewById(R.id.recyclerEstudiante);
+        RecyclerView recyclerEstudiante = findViewById(R.id.recyclerEstudiante);
         recyclerEstudiante.setLayoutManager(new LinearLayoutManager(this));
-
-        cursor = db.allEstudiantes();
-        while (cursor.moveToNext())
-            listaEstudiante.add(new Estudiante(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
-        EstudianteAdapter adapter = new EstudianteAdapter(listaEstudiante);
-        recyclerEstudiante.setAdapter(adapter);
+        new EstudianteAdapter(new EstudianteController(getApplicationContext()), recyclerEstudiante);
     }
 }

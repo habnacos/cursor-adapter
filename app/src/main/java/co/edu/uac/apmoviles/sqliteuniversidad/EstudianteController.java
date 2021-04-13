@@ -39,4 +39,8 @@ public class EstudianteController {
         return cur;
     }
 
+    public boolean deleteByCode(String code){
+        SQLiteDatabase db = bd.getReadableDatabase();
+        return db.delete(DefDB.tabla_est, DefDB.col_codigo+"=?", new String[]{code}) > 0;
+    }
 }
