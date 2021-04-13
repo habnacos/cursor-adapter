@@ -20,9 +20,9 @@ public class EstudianteController {
         try{
             SQLiteDatabase sql = bd.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(DefDB.col_codigo, e.getCodigo());
-            cv.put(DefDB.col_nombre, e.getNombre());
-            cv.put(DefDB.col_programa, e.getPrograma());
+            cv.put(DefDB.col_codigo, e.getCodigo().trim());
+            cv.put(DefDB.col_nombre, e.getNombre().trim());
+            cv.put(DefDB.col_programa, e.getPrograma().trim());
             long id = sql.insert(DefDB.tabla_est,null,cv);
             return id;
         }
@@ -34,6 +34,15 @@ public class EstudianteController {
     public Cursor allEstudiantes(){
         SQLiteDatabase data = bd.getReadableDatabase();
         Cursor cur = data.rawQuery( "Select * from " + DefDB.tabla_est,null);
+        if (cur != null)
+            cur.moveToFirst();
+        return cur;
+    }
+
+    public Cursor findEstudentByCode(String code){
+        SQLiteDatabase data = bd.getReadableDatabase();
+        code = "'%"+code.trim()+"%'";
+        Cursor cur = data.rawQuery( "Select * from " + DefDB.tabla_est +" WHERE `"+DefDB.col_codigo+"` LIKE " + code, null);
         if (cur != null)
             cur.moveToFirst();
         return cur;

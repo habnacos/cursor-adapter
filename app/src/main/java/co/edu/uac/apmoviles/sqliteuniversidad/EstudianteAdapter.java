@@ -19,17 +19,29 @@ public class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Es
     ArrayList<Estudiante> listaEstudiante;
     RecyclerView recyclerEstudiante;
     public EstudianteController db;
+    String code;
 
     public EstudianteAdapter(EstudianteController db, RecyclerView recyclerEstudiante) {
         this.db = db;
+        code = "";
         this.recyclerEstudiante = recyclerEstudiante;
         this.generateListEstudents();
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public void generateListEstudents() {
         this.listaEstudiante = new ArrayList<>();
 
-        Cursor cursor = db.allEstudiantes();
+        Cursor cursor = null;
+        if (code.length() == 0)
+            cursor = db.allEstudiantes();
+        else
+            cursor = db.findEstudentByCode(code);
+
+        cursor.moveToFirst();
         while (cursor.moveToNext())
             listaEstudiante.add(new Estudiante(cursor.getString(0), cursor.getString(1), cursor.getString(2)));
         this.recyclerEstudiante.setAdapter(this);
